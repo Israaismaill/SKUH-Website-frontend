@@ -1,0 +1,34 @@
+<section class="premium-hero" style="background-image: url('/hospital-building.jpg')">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content fade-in">
+        <span class="hero-badge">Our Experts · Clinical Excellence</span>
+        <h1>Our <span class="highlight">Doctors</span></h1>
+        <p>World-class doctors dedicated to your health and clinical excellence.</p>
+        <div class="hero-divider"></div>
+    </div>
+</section>
+
+<section class="dr-listing section-padding">
+    <div class="container">
+        <div class="dr-grid">
+            <div class="dr-card glass" *ngFor="let dr of doctors">
+                <div class="dr-avatar">
+                    <div class="dr-img-container" *ngIf="dr.image">
+                        <img [src]="dr.image" [alt]="dr.name" class="dr-img">
+                    </div>
+                </div>
+                <div class="dr-details">
+                    <span class="spec">{{dr.specialty}}</span>
+                    <h4>{{dr.name}}</h4>
+                    <p class="bio">{{dr.bio}}</p>
+                    <div class="dr-actions">
+                        <div class="dr-schedule" style="margin-bottom: 1.25rem; font-weight: 600; color: #00a76f;">
+                            <i data-lucide="clock" style="width: 16px; height: 16px; margin-right: 5px;"></i> المواعيد: {{dr.schedule}}
+                        </div>
+                        <button class="btn btn-primary btn-sm" [routerLink]="['/appointment']" [queryParams]="{doctor: dr.name}">Book Now (احجز الان)</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
