@@ -15,8 +15,13 @@ export class NavbarComponent implements AfterViewInit {
     isMenuOpen = false;
 
     ngAfterViewInit() {
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
+    this.initIcons();
+  }
+  initIcons() {
+    if (typeof lucide !== 'undefined') {
+      // This command finds all <i data-lucide="..."> and turns them into icons
+      lucide.createIcons();
     }
+}
+
 }

@@ -13,136 +13,186 @@ declare var lucide: any;
     styleUrls: ['./portal.component.scss']
 })
 export class PatientPortalComponent implements OnInit, AfterViewInit {
+
     viewState: 'login' | 'register' | 'activation' | 'dashboard' = 'login';
-    
-    // Auth Data
+
+    // ================= AUTH =================
+    regFirstName: string = '';
+    regLastName: string = '';
+    regEmail: string = '';
+    regPhone: string = '';
+    regPassword: string = '';
+
     loginPhone = '';
     loginPassword = '';
-    
-    regName = '';
-    regPhone = '';
-    regPassword = '';
-    
+
+    currentUser: any = null;
+
+    // ================= INSURANCE =================
+    hasInsurance: boolean = false;
+    selectedInsuranceCompany: string = '';
+    insuranceId: string = '';
+
+    insuranceCompanies: string[] = [
+        'Egycare Healthcare',
+        'MedNet Egypt',
+        'Nextcare',
+        'GlobeMed Egypt',
+        'Neuron Egypt',
+        'Care Plus',
+        'Med Right',
+        'Med Sure',
+        'Unicare Egypt',
+        'Misr Healthcare Network',
+        'Al Ahly Medical Company',
+        'Limitless Care'
+    ];
+
+    // ================= ACTIVATION =================
     actCode = '';
     generatedCode = '';
-    
-    currentUser: any = null;
-    
-    // Dashboard Data
-    activeTab: 'dashboard' | 'appointments' | 'labs' | 'imaging' = 'dashboard';
+
+    // ================= DASHBOARD =================
+    activeTab: 'dashboard' | 'appointments' | 'labs' | 'imaging' | 'chronic' = 'dashboard';
+
     insuranceFile: any = null;
-    reservationStatus = '';
     uploadSuccess = false;
+
     myAppointments: any[] = [];
     labResults: any[] = [];
     imagingRecords: any[] = [];
 
+    // ================= CHRONIC MEDICATION =================
+    chronic = {
+        medName: '',
+        condition: '',
+        doctor: '',
+        duration: '',
+        files: [] as File[]
+    };
+
+    chronicRequests: any[] = [];
+
+    // =====================================================
+
     ngOnInit() {
-        // Check if logged in
         const usr = localStorage.getItem('currentUser');
+
         if (usr) {
             this.currentUser = JSON.parse(usr);
             this.viewState = 'dashboard';
             this.loadPatientData();
         }
+
+        // Load Chronic Requests (per user)
+        const allChronic = JSON.parse(localStorage.getItem('chronicRequests') || '[]');
+        this.chronicRequests = allChronic.filter((r: any) =>
+            r.patientPhone === this.currentUser?.phone
+        );
     }
 
     loadPatientData() {
         if (!this.currentUser) return;
+
         const allAppointments = JSON.parse(localStorage.getItem('patientAppointments') || '[]');
         this.myAppointments = allAppointments.filter((a: any) => a.patientPhone === this.currentUser.phone);
-        
-        // Mock Lab Results for "Real Portal" feel
+
         this.labResults = [
-            { date: '2026-03-15', name: 'Complete Blood Count (CBC)', result: 'Normal', status: 'Final' },
-            { date: '2026-03-15', name: 'Lipid Profile', result: 'Slightly High Cholesterol', status: 'Final' },
-            { date: '2026-02-10', name: 'Blood Glucose (Fasting)', result: '95 mg/dL', status: 'Final' }
+            { date: '2026-03-15', name: 'CBC', result: 'Normal', status: 'Final' },
+            { date: '2026-03-15', name: 'Lipid Profile', result: 'High Cholesterol', status: 'Final' }
         ];
 
-        // Mock Imaging for "Real Portal" feel
         this.imagingRecords = [
-            { date: '2026-03-12', type: 'Chest X-Ray', findings: 'Clear lungs, normal heart size.', id: 'XR-7721' },
-            { date: '2026-01-05', type: 'Abdominal Ultrasound', findings: 'No abnormalities detected in major organs.', id: 'US-4402' }
+            { date: '2026-03-12', type: 'Chest X-Ray', findings: 'Normal', id: 'XR-7721' }
         ];
 
-        // Check if ID was already uploaded (stored in user object)
         if (this.currentUser.insuranceIdFile) {
             this.insuranceFile = this.currentUser.insuranceIdFile;
             this.uploadSuccess = true;
         }
 
-        setTimeout(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); }, 100);
+        setTimeout(() => { if (lucide) lucide.createIcons(); }, 100);
     }
 
     setActiveTab(tab: any) {
         this.activeTab = tab;
-        setTimeout(() => { if (typeof lucide !== 'undefined') lucide.createIcons(); }, 50);
+        setTimeout(() => { if (lucide) lucide.createIcons(); }, 50);
     }
 
     ngAfterViewInit() {
-        if (typeof lucide !== 'undefined') {
-            setTimeout(() => lucide.createIcons(), 100);
-        }
+        setTimeout(() => { if (lucide) lucide.createIcons(); }, 100);
     }
 
-    goToRegister() {
-        this.viewState = 'register';
-    }
-
-    goToLogin() {
-        this.viewState = 'login';
-    }
+    // ================= AUTH =================
+    goToRegister() { this.viewState = 'register'; }
+    goToLogin() { this.viewState = 'login'; }
 
     register() {
-        if (!this.regName || !this.regPhone || !this.regPassword) {
-            alert('Please fill all fields');
+        if (!this.regFirstName || !this.regLastName || !this.regPhone || !this.regPassword) {
+            alert('Fill all fields');
             return;
         }
-        // Save user to local storage db
+
         let users = JSON.parse(localStorage.getItem('portalUsers') || '[]');
-        if (users.find((u:any) => u.phone === this.regPhone)) {
-            alert('User already exists!');
+
+        if (users.find((u: any) => u.phone === this.regPhone)) {
+            alert('User exists');
             return;
         }
-        users.push({ name: this.regName, phone: this.regPhone, password: this.regPassword, active: false, insuranceIdFile: null });
+
+        const fullName = `${this.regFirstName} ${this.regLastName}`;
+
+        const newUser = {
+            name: fullName,
+            email: this.regEmail,
+            phone: this.regPhone,
+            password: this.regPassword,
+            active: false,
+            insuranceIdFile: null,
+            hasInsurance: this.hasInsurance,
+            insuranceCompany: this.selectedInsuranceCompany,
+            insuranceId: this.insuranceId
+        };
+
+        users.push(newUser);
         localStorage.setItem('portalUsers', JSON.stringify(users));
-        
-        // Generate activation code
+
         this.generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
-        alert('Your activation code is: ' + this.generatedCode);
+        alert('Code: ' + this.generatedCode);
+
         this.viewState = 'activation';
     }
 
     activate() {
-        if (this.actCode === this.generatedCode || this.actCode === '1234') { // 1234 as fallback
+        if (this.actCode === this.generatedCode || this.actCode === '1234') {
             let users = JSON.parse(localStorage.getItem('portalUsers') || '[]');
-            let usr = users.find((u:any) => u.phone === this.regPhone);
+            let usr = users.find((u: any) => u.phone === this.regPhone);
+
             if (usr) {
                 usr.active = true;
                 localStorage.setItem('portalUsers', JSON.stringify(users));
-                alert('Account activated! You can now login.');
+                alert('Activated');
                 this.viewState = 'login';
             }
-        } else {
-            alert('Invalid code');
-        }
+        } else alert('Wrong code');
     }
 
     login() {
         let users = JSON.parse(localStorage.getItem('portalUsers') || '[]');
-        let usr = users.find((u:any) => u.phone === this.loginPhone && u.password === this.loginPassword);
-        if (usr) {
-            if (!usr.active) {
-                alert('Account not activated. Please register again or activate.');
-                return;
-            }
-            this.currentUser = usr;
-            localStorage.setItem('currentUser', JSON.stringify(usr));
-            this.viewState = 'dashboard';
-            this.loadPatientData();
-        } else {
-            alert('Invalid credentials');
-        }
+
+        let usr = users.find((u: any) =>
+            u.phone === this.loginPhone && u.password === this.loginPassword
+        );
+
+        if (!usr) return alert('Invalid');
+
+        if (!usr.active) return alert('Not activated');
+
+        this.currentUser = usr;
+        localStorage.setItem('currentUser', JSON.stringify(usr));
+
+        this.viewState = 'dashboard';
+        this.loadPatientData();
     }
 
     logout() {
@@ -151,6 +201,7 @@ export class PatientPortalComponent implements OnInit, AfterViewInit {
         this.viewState = 'login';
     }
 
+    // ================= INSURANCE =================
     onFileSelect(event: any) {
         if (event.target.files.length > 0) {
             this.insuranceFile = event.target.files[0].name;
@@ -159,35 +210,51 @@ export class PatientPortalComponent implements OnInit, AfterViewInit {
     }
 
     submitRequest() {
-        if (!this.insuranceFile) {
-            alert('Please select an insurance ID file first.');
-            return;
-        }
-        
-        // Update current user and global users list
         this.currentUser.insuranceIdFile = this.insuranceFile;
         localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+        this.uploadSuccess = true;
+        alert('Insurance uploaded');
+    }
 
-        let users = JSON.parse(localStorage.getItem('portalUsers') || '[]');
-        let usrIdx = users.findIndex((u:any) => u.phone === this.currentUser.phone);
-        if (usrIdx > -1) {
-            users[usrIdx].insuranceIdFile = this.insuranceFile;
-            localStorage.setItem('portalUsers', JSON.stringify(users));
+    // ================= CHRONIC =================
+    onChronicFileSelect(event: any) {
+        this.chronic.files = Array.from(event.target.files);
+    }
+
+    submitChronicRequest() {
+        if (!this.chronic.medName || !this.chronic.condition) {
+            alert("Fill required fields");
+            return;
         }
 
-        // Also push to portalRequests for admin to see the record
-        let requests = JSON.parse(localStorage.getItem('portalRequests') || '[]');
-        requests.push({
+        const newRequest = {
             id: Date.now(),
             patientName: this.currentUser.name,
             patientPhone: this.currentUser.phone,
-            insuranceIdFile: this.insuranceFile,
-            status: 'Verified', // No longer 'Pending'
+            medName: this.chronic.medName,
+            condition: this.chronic.condition,
+            doctor: this.chronic.doctor,
+            duration: this.chronic.duration,
+            files: this.chronic.files.map(f => f.name),
+            status: 'Pending',
             date: new Date().toLocaleDateString()
-        });
-        localStorage.setItem('portalRequests', JSON.stringify(requests));
-        
-        this.uploadSuccess = true;
-        alert('Insurance ID saved to your profile successfully.');
+        };
+
+        const all = JSON.parse(localStorage.getItem('chronicRequests') || '[]');
+        all.push(newRequest);
+
+        localStorage.setItem('chronicRequests', JSON.stringify(all));
+
+        this.chronicRequests.push(newRequest);
+
+        alert("Request sent!");
+
+        this.chronic = {
+            medName: '',
+            condition: '',
+            doctor: '',
+            duration: '',
+            files: []
+        };
     }
 }

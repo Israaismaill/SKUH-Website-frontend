@@ -1,3 +1,17 @@
+<div class="side-socials">
+    <a href="https://www.facebook.com/themskuh" target="_blank" class="side-icon facebook" title="Facebook">
+        <img src="assets/facebook.png" alt="Facebook">
+    </a>
+    <a href="https://www.instagram.com/souad_kafafi_hospital" target="_blank" class="side-icon instagram" title="Instagram">
+        <img src="assets/instgram.png" alt="Instagram">
+    </a>
+    <a href="https://www.linkedin.com/company/skuh/" target="_blank" class="side-icon linkedin" title="LinkedIn">
+        <img src="assets/linkedin.png" alt="LinkedIn">
+    </a>
+    <a href="https://x.com/themskuh" target="_blank" class="side-icon x-twitter" title="X (Twitter)">
+        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
+    </a>
+</div>
 <nav class="navbar">
     <div class="nav-content">
 
@@ -13,7 +27,7 @@
             <li><a routerLink="/about" routerLinkActive="active" (click)="isMenuOpen=false">About Us</a></li>
             <li><a routerLink="/services" routerLinkActive="active" (click)="isMenuOpen=false">Services</a></li>
             <li><a routerLink="/doctors" routerLinkActive="active" (click)="isMenuOpen=false">Doctors</a></li>
-            <li><a routerLink="/portal" routerLinkActive="active" (click)="isMenuOpen=false">Patient Portal</a></li>
+            <li><a routerLink="/portal" routerLinkActive="active" (click)="isMenuOpen=false">Patient login</a></li>
             <li><a routerLink="/news" routerLinkActive="active" (click)="isMenuOpen=false">News</a></li>
             <li><a routerLink="/contact" routerLinkActive="active" (click)="isMenuOpen=false">Contact Us</a></li>
         </ul>
@@ -25,20 +39,8 @@
                 Book Appointment
             </button>
 
-            <div class="nav-socials" style="display: flex; gap: 1rem; align-items: center; border-left: 1px solid rgba(255,255,255,0.2); padding-left: 1.5rem;">
-                <a href="https://www.facebook.com/themskuh" target="_blank" title="Hospital Facebook" style="color: white; opacity: 0.85; transition: opacity 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.85">
-                    <i data-lucide="facebook" style="width: 20px; height: 20px;"></i>
-                </a>
-                <a href="https://www.linkedin.com/company/skuh/" target="_blank" title="Hospital LinkedIn" style="color: white; opacity: 0.85; transition: opacity 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.85">
-                    <i data-lucide="linkedin" style="width: 20px; height: 20px;"></i>
-                </a>
-                <a href="https://www.instagram.com/souad_kafafi_hospital" target="_blank" title="Hospital Instagram" style="color: white; opacity: 0.85; transition: opacity 0.3s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.85">
-                    <i data-lucide="instagram" style="width: 20px; height: 20px;"></i>
-                </a>
-                <a href="https://x.com/themskuh" target="_blank" title="Hospital X" style="color: white; opacity: 0.85; transition: opacity 0.3s; display: flex;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.85">
-                    <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor; margin-top:2px;"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 22.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path></svg>
-                </a>
-            </div>
+
+            
 
             <!-- Login Link -->
             <a routerLink="/admin" style="color: white; opacity: 0.85; font-size: 0.95rem; font-weight: 500; transition: opacity 0.3s; text-decoration: none; border-left: 1px solid rgba(255,255,255,0.2); padding-left: 1.5rem;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.85">
