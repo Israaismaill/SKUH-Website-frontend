@@ -14,7 +14,8 @@ export class SliderComponent implements OnInit, OnDestroy {
     '/hospital-building.jpg',
     '/slider 3.jpeg',
     '/slider 4.jpeg',
-    '/slider 6.jpeg'
+    '/slider 6.jpeg',
+    '/assets/photo.png'
   ];
   currentHeroIndex = 0;
   heroInterval: any;

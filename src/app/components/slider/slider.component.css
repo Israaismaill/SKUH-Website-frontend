@@ -1,4 +1,4 @@
-/* الحاوية الأساسية للسلايدر */
+/* ===== HERO CONTAINER ===== */
 .hero {
     position: relative;
     height: 80vh;
@@ -9,69 +9,104 @@
     color: white;
 }
 
-/* تنسيق الصور */
+/* ===== SLIDES ===== */
 .hero-slide {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: cover;
-    background-position: center;
-    transition: opacity 1s ease-in-out;
-    z-index: -1;
+
     opacity: 0;
+    transition: opacity 1s ease-in-out;
+    z-index: 0;
 }
 
 .hero-slide.active {
     opacity: 1;
 }
 
-/* الطبقة الغامقة فوق الصور عشان الكلام يبان */
+/* ===== IMAGE ===== */
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.85);
+}
+
+/* ===== OVERLAY ===== */
 .hero-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
-    z-index: 0;
+
+    background: linear-gradient(to bottom,
+        rgba(0,0,0,0.3),
+        rgba(0,0,0,0.7));
+
+    z-index: 1;
 }
 
-/* الزراير (الأسهم) */
+/* ===== CONTENT ===== */
+.container {
+    position: relative;
+    z-index: 5;
+    padding: 0 10%;
+}
+
+/* ===== ARROWS ===== */
 .slider-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
+
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.7);
     border-radius: 50%;
-    width: 50px;
-    height: 50px;
+
+    width: 60px;
+    height: 60px;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     cursor: pointer;
     color: white;
-    z-index: 10;
+
+    z-index: 30;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+
     transition: all 0.3s ease;
 }
 
 .slider-btn:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: white;
+    color: black;
+    transform: translateY(-50%) scale(1.15);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.6);
 }
 
-/* السهم الشمال */
+/* icon size */
+.slider-btn i {
+    width: 28px;
+    height: 28px;
+}
+
+/* positions */
 .slider-btn.prev {
     left: 30px;
 }
 
-/* السهم اليمين */
 .slider-btn.next {
     right: 30px;
 }
 
-/* النقاط اللي تحت (Dots) */
+/* ===== DOTS ===== */
 .slider-dots {
     position: absolute;
     bottom: 30px;
@@ -94,11 +129,4 @@
     background: #fff;
     width: 30px;
     border-radius: 10px;
-}
-
-/* محتوى الكلام */
-.container {
-    position: relative;
-    z-index: 5;
-    padding: 0 10%;
 }
